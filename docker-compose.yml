@@ -1,0 +1,40 @@
+version: '3'
+services:
+  frontend:
+    build:
+      context: ./frontend-customers  
+      dockerfile: Dockerfile  
+    container_name: frontend-container
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  backend:
+    build:
+      context: ./crud-fullstack-angular 
+      dockerfile: Dockerfile 
+    container_name: backend-container
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  db:
+    image: mysql:8.0
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: customer_managment
+    ports:
+      - "3306:3306"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
